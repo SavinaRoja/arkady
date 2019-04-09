@@ -6,6 +6,7 @@
 import asyncio
 import concurrent.futures
 from functools import partial
+import uuid
 
 
 class Device(object):
@@ -13,8 +14,10 @@ class Device(object):
     The Base Device from which all other devices derive, whether they have
     synchronous or asynchronous underlying communication.
     """
-    def __init__(self, *args, **kwargs):
-        self.loop = asyncio.get_event_loop()
+    def __init__(self, *args, loop=None, **kwargs):
+        if loop is None:
+            raise Exception('loop was not explicitly passed!')
+        self.loop = loop
         self.jobs_meta = {}
         self.jobs = asyncio.Queue()
 
@@ -43,9 +46,9 @@ class Device(object):
 
 
 class SerialDevice(Device):
-    def __init__(self, port, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         super(SerialDevice, self).__init__(*args, **kwargs)
-        self.port = port
+        # self.port = port
         self.executor = concurrent.futures.ThreadPoolExecutor(max_workers=1)
 
     # Gets run as a coroutine
@@ -97,6 +100,12 @@ class AsyncDevice(Device):
 
 
 class DummySerialDevice(SerialDevice):
-    def handler(self, msg):
+    def handler(self, msg: str) -> str:
         print(msg)
-        return 'ACK: {}'.format(msg)
+        return msg
+
+
+class DummyAsyncDevice(AsyncDevice):
+    def handler(self, msg: str) -> str:
+        print(msg)
+        return msg

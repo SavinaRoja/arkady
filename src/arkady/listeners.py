@@ -8,14 +8,12 @@ import zmq
 import zmq.asyncio
 
 
-async def router(zmq_context, api_map, bind_to=None):
+async def router(application, bind_to=None):
     """
     The ``router`` listener handles asynchronous requests in the request-reply
     pattern. A request of type `zmq.REQ` shall be given of type `zmq.REP`
 
-    :param zmq_context: The ``zmq.asyncio.Context`` of the parent application
-    :param api_map:  The ``api_map`` of the parent application
-    :type api_map: dict
+    :param application:
     :param bind_to: Network path on which to listen. Defaults to ``'tcp://*:5555'``
     :type bind_to: string
     :return:
@@ -26,7 +24,7 @@ async def router(zmq_context, api_map, bind_to=None):
 
     loop = asyncio.get_event_loop()
 
-    rsock = zmq_context.socket(zmq.ROUTER)
+    rsock = application.zmq_context.socket(zmq.ROUTER)
     rsock.bind(bind_to)
 
     return_queue = asyncio.Queue()
@@ -35,13 +33,13 @@ async def router(zmq_context, api_map, bind_to=None):
         while True:
             request = await rsock.recv_multipart()
             # Separate the header from the body of the message
-            header, body = request[0:2], request[2]
+            headers, body = request[0:2], request[2]
             body = body.decode('utf-8')
             # Separate the name from the msg to find the device to pass msg to
             name, msg = body.split(maxsplit=1)
-            device = api_map[name]
+            device = application.api_map[name]
             # Pass the header, msg, and return_queue to device for enqueuing
-            loop.create_task(device._handler(header=header,
+            loop.create_task(device._handler(headers=headers,
                                              msg=msg,
                                              return_queue=return_queue
                                              ))
@@ -61,14 +59,12 @@ async def router(zmq_context, api_map, bind_to=None):
         # zmq_context.term()
 
 
-async def sub(zmq_context, api_map, connect_to=None, topics=None):
+async def sub(application, connect_to=None, topics=None):
     """
     The ``sub`` listener handles asynchronous requests in the pub-sub
     pattern. A request of type `zmq.REQ` shall be given of type `zmq.REP`
 
-    :param zmq_context: The ``zmq.asyncio.Context`` of the parent application
-    :param api_map: The ``api_map`` of the parent application
-    :type api_map: dict
+    :param application:
     :param connect_to: A well-known network URI, like 'tcp://192.168.1.200:5555'
     :type connect_to: string
     :param topics: A list of topics as to subscribe to
@@ -84,7 +80,7 @@ async def sub(zmq_context, api_map, connect_to=None, topics=None):
 
     loop = asyncio.get_event_loop()
 
-    ssock = zmq_context.socket(zmq.SUB)
+    ssock = application.zmq_context.socket(zmq.SUB)
 
     for topic in topics:
         ssock.setsockopt(zmq.SUBSCRIBE, topic.encode('utf-8'))
@@ -96,6 +92,6 @@ async def sub(zmq_context, api_map, connect_to=None, topics=None):
         topic, body = pub[0], pub[1]
         topic, body = topic.decode('utf-8'), body.decode('utf-8')
         name, msg = body.split(maxsplit=1)
-        device = api_map[name]
+        device = application.api_map[name]
         # Pass the msg, and return_queue to device for enqueuing
         loop.create_task(device._handler(topic=topic, msg=msg))
