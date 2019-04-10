@@ -88,12 +88,12 @@ a simple program in Python that will do so.
 import time
 import zmq
 
-RPI_IP = 'tcp://localhost:5555'  # Same machine
-# RPI_IP = 'tcp://192.168.1.111:5555'  # remote machine
+RPI_URI = 'tcp://localhost:5555'  # Same machine
+# RPI_URI = 'tcp://192.168.1.111:5555'  # remote machine
 
 context = zmq.Context()
 socket = context.socket(zmq.REQ)  # Request type socket, expects replies
-socket.connect(RPI_IP)
+socket.connect(RPI_URI)
 
 while True:
     # Send 'temp get'. First word is device name, remainder is message

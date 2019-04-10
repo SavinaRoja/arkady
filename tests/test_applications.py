@@ -7,11 +7,8 @@ import multiprocessing
 class RouterApplication(Application):
     router_port = 5555
 
-    def __init__(self, *args, **kwargs):
-        super(RouterApplication, self).__init__(*args, **kwargs)
+    def config(self):
         self.add_router(bind_to='tcp://*:{}'.format(self.router_port))
-
-    def initialize_devices(self):
         self.add_device(DummySerialDevice, 'serial')
         self.add_device(DummyAsyncDevice, 'async')
 
@@ -19,11 +16,8 @@ class RouterApplication(Application):
 class SubApplication(Application):
     sub_port = 5556
 
-    def __init__(self, *args, **kwargs):
-        super(SubApplication, self).__init__(*args, **kwargs)
+    def config(self):
         self.add_sub(connect_to='tcp://localhost:{}'.format(self.sub_port), topics=['test'])
-
-    def initialize_devices(self):
         self.add_device(DummySerialDevice, 'serial')
         self.add_device(DummyAsyncDevice, 'async')
 
@@ -32,12 +26,9 @@ class DualApplication(Application):
     router_port = 5557
     sub_port = 5558
 
-    def __init__(self, *args, **kwargs):
-        super(DualApplication, self).__init__(*args, **kwargs)
+    def config(self):
         self.add_router(bind_to='tcp://*:{}'.format(self.router_port))
         self.add_sub(connect_to='tcp://localhost:{}'.format(self.sub_port), topics=['test'])
-
-    def initialize_devices(self):
         self.add_device(DummySerialDevice, 'serial')
         self.add_device(DummyAsyncDevice, 'async')
 
