@@ -3,8 +3,6 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-.. _contents:
-
 Welcome to Arkady's documentation!
 ==================================
 
@@ -112,15 +110,4 @@ a simple program in Python that will do so.
        print(socket.recv_string())
        time.sleep(5)  # Sleep 5 seconds between temperature checks
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
-
-   listeners
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+.. _contents:
