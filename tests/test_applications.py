@@ -1,8 +1,7 @@
 from arkady.application import Application
 from arkady.devices import DummySerialDevice, DummyAsyncDevice
 
-import asyncio
-import concurrent.futures
+import multiprocessing
 
 
 class RouterApplication(Application):
@@ -13,8 +12,8 @@ class RouterApplication(Application):
         self.add_router(bind_to='tcp://*:{}'.format(self.router_port))
 
     def initialize_devices(self):
-        self.add_device('serial', DummySerialDevice)
-        self.add_device('async', DummyAsyncDevice)
+        self.add_device(DummySerialDevice, 'serial')
+        self.add_device(DummyAsyncDevice, 'async')
 
 
 class SubApplication(Application):
@@ -22,11 +21,11 @@ class SubApplication(Application):
 
     def __init__(self, *args, **kwargs):
         super(SubApplication, self).__init__(*args, **kwargs)
-        self.add_router(bind_to='tcp://*:{}'.format(self.router_port))
+        self.add_sub(connect_to='tcp://localhost:{}'.format(self.sub_port), topics=['test'])
 
     def initialize_devices(self):
-        self.add_device('serial', DummySerialDevice)
-        self.add_device('async', DummyAsyncDevice)
+        self.add_device(DummySerialDevice, 'serial')
+        self.add_device(DummyAsyncDevice, 'async')
 
 
 class DualApplication(Application):
@@ -36,23 +35,33 @@ class DualApplication(Application):
     def __init__(self, *args, **kwargs):
         super(DualApplication, self).__init__(*args, **kwargs)
         self.add_router(bind_to='tcp://*:{}'.format(self.router_port))
+        self.add_sub(connect_to='tcp://localhost:{}'.format(self.sub_port), topics=['test'])
 
     def initialize_devices(self):
-        self.add_device('serial', DummySerialDevice)
-        self.add_device('async', DummyAsyncDevice)
+        self.add_device(DummySerialDevice, 'serial')
+        self.add_device(DummyAsyncDevice, 'async')
+
+
+def a0():
+    RouterApplication().run()
+
+
+def a1():
+    SubApplication().run()
+
+
+def a2():
+    DualApplication().run()
 
 
 if __name__ == '__main__':
-    loop = asyncio.get_event_loop()
+    p0 = multiprocessing.Process(target=a0)
+    p1 = multiprocessing.Process(target=a1)
+    p2 = multiprocessing.Process(target=a2)
+    p0.start()
+    p1.start()
+    p2.start()
+    p0.join()
+    p1.join()
+    p2.join()
 
-    # def simple_main():
-    #RouterApplication().run()
-
-
-    # async def main():
-    #     await asyncio.gather(
-    #         loop.run_in_executor(None, RouterApplication(loop=loop).run),
-    #         # loop.run_in_executor(pool, SubApplication().run),
-    #         # loop.run_in_executor(pool, DualApplication().run),
-    #     )
-    loop.run_until_complete(RouterApplication().run())

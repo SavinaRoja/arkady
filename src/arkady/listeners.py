@@ -37,12 +37,15 @@ async def router(application, bind_to=None):
             body = body.decode('utf-8')
             # Separate the name from the msg to find the device to pass msg to
             name, msg = body.split(maxsplit=1)
-            device = application.api_map[name]
+            device = application.device_key_map[name]
             # Pass the header, msg, and return_queue to device for enqueuing
-            loop.create_task(device._handler(headers=headers,
-                                             msg=msg,
-                                             return_queue=return_queue
-                                             ))
+            loop.create_task(
+                device._handler(
+                    headers=headers,
+                    msg=msg,
+                    return_queue=return_queue
+                )
+            )
 
     async def transmit():
         while True:
@@ -73,7 +76,7 @@ async def sub(application, connect_to=None, topics=None):
     """
 
     if topics is None:
-        topics = ['test']
+        topics = ['']
 
     if connect_to is None:
         connect_to = 'tcp://localhost:5555'
@@ -92,6 +95,6 @@ async def sub(application, connect_to=None, topics=None):
         topic, body = pub[0], pub[1]
         topic, body = topic.decode('utf-8'), body.decode('utf-8')
         name, msg = body.split(maxsplit=1)
-        device = application.api_map[name]
+        device = application.device_key_map[name]
         # Pass the msg, and return_queue to device for enqueuing
         loop.create_task(device._handler(topic=topic, msg=msg))

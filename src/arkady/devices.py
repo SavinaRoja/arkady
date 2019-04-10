@@ -62,7 +62,7 @@ class SerialDevice(Device):
             else:
                 await self.loop.run_in_executor(self.executor, handler)
 
-    def handler(self, msg: str) -> str:
+    def handler(self, msg: str, *args, **kwargs) -> str:
         # Shall raise an error if called without implementation
         raise NotImplementedError
 
@@ -100,12 +100,16 @@ class AsyncDevice(Device):
 
 
 class DummySerialDevice(SerialDevice):
-    def handler(self, msg: str) -> str:
+    def handler(self, msg: str, *args, **kwargs) -> str:
+        if 'topic' in kwargs:
+            print(kwargs['topic'])
         print(msg)
         return msg
 
 
 class DummyAsyncDevice(AsyncDevice):
-    def handler(self, msg: str) -> str:
+    def handler(self, msg: str, *args, **kwargs) -> str:
+        if 'topic' in kwargs:
+            print(kwargs['topic'])
         print(msg)
         return msg
