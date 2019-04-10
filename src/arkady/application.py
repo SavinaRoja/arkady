@@ -28,9 +28,9 @@ class Application(object):
         self.device_key_map = {}
         self._devices = []
         self._listeners = []
-        self.on_init()
+        self.config()
 
-    def on_init(self):
+    def config(self):
         """
         Actions to be performed on initialization of the `Application`.
 

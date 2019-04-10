@@ -2,3 +2,5 @@
 
 """
 """
+
+from .application import Application
