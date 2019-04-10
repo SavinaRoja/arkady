@@ -11,7 +11,7 @@ import zmq.asyncio
 async def router(application, bind_to=None):
     """
     The ``router`` listener handles asynchronous requests in the request-reply
-    pattern. A request of type `zmq.REQ` shall be given of type `zmq.REP`
+    pattern. A request of type `zmq.REQ` shall be given a reply of type `zmq.REP`
 
     :param application:
     :param bind_to: Network path on which to listen. Defaults to ``'tcp://*:5555'``
@@ -65,7 +65,7 @@ async def router(application, bind_to=None):
 async def sub(application, connect_to=None, topics=None):
     """
     The ``sub`` listener handles asynchronous requests in the pub-sub
-    pattern. A request of type `zmq.REQ` shall be given of type `zmq.REP`
+    pattern. A request of type `zmq.PUB` receives no reply
 
     :param application:
     :param connect_to: A well-known network URI, like 'tcp://192.168.1.200:5555'

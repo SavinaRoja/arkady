@@ -3,12 +3,14 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
+.. _contents:
+
 Welcome to Arkady's documentation!
 ==================================
 
 Dependencies
 ------------
-[pyzmq](https://pyzmq.readthedocs.io/en/latest/)
+.. _pyzmq: https://pyzmq.readthedocs.io/en/latest/
 
 What Arkady **is**
 ------------------
@@ -48,6 +50,7 @@ another computer on my network. This command would do the trick from the
 command line: ``/opt/vc/bin/vcgencmd measure_temp`` so I want to set up an
 Arkady *device* for it.
 
+.. highlight:: python
    from arkady.devices import AsyncDevice
    import subprocess
 
@@ -67,6 +70,7 @@ Arkady *device* for it.
 
 Now I need to create an Arkady application to make use of this custom "device".
 
+.. highlight:: python
    from arkady import Application
 
    class RpiCPUTempApp(Application):
@@ -90,6 +94,7 @@ returns the temperature string.
 Now, you can send messages via ZeroMQ in whatever language you please. Here's
 a simple program in Python that will do so.
 
+.. highlight:: python
    import time
    import zmq
 
