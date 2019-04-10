@@ -43,7 +43,7 @@ from arkady.devices import AsyncDevice
 import subprocess
 
 class RpiCPUTemp(AsyncDevice):
-    def handler(msg, *args, **kwargs):
+    def handler(self, msg, *args, **kwargs):
         if msg == 'get':
             # command returns bytestring like b"temp=47.8'C"
             temp_out =  subprocess.run(
@@ -51,7 +51,7 @@ class RpiCPUTemp(AsyncDevice):
                  'measure_temp'],
                 capture_output=True).stdout.decode('utf-8')
             # extract temperature string
-            temperature = temp.split('=')[1].rstrip()
+            temperature = temp_out.split('=')[1].rstrip()
             return temperature
         else:
             return 'Unrecognized msg. Must be "get"'
@@ -66,7 +66,7 @@ class RpiCPUTempApp(Application):
     def config(self):
         """This is called as the last step in setup for the Application"""
         # Creates the device and gives it the name 'temp'
-        self.add_device(RPiCPUTemp, 'temp')
+        self.add_device(RpiCPUTemp, 'temp')
         # Creates a router type listener and listens on port 5555
         self.add_router(bind_to='tcp://*:5555')
 
@@ -88,15 +88,15 @@ a simple program in Python that will do so.
 import time
 import zmq
 
-RPI_IP = 'localhost'  # Same machine
-# RPI_IP = '192.168.1.111'  # remote machine
+RPI_IP = 'tcp://localhost:5555'  # Same machine
+# RPI_IP = 'tcp://192.168.1.111:5555'  # remote machine
 
 context = zmq.Context()
 socket = context.socket(zmq.REQ)  # Request type socket, expects replies
 socket.connect(RPI_IP)
 
 while True:
-    time.sleep(60)  # Sleep a minute between temperature checks
     socket.send_string('temp get')
     print(socket.recv_string())
+    time.sleep(5)  # Sleep 5 seconds between temperature checks
 ```
