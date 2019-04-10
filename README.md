@@ -4,19 +4,19 @@ Framework for interprocess/remote device management
 ## Dependencies
 [pyzmq](https://pyzmq.readthedocs.io/en/latest/)
 
-## What Arkady is
+## What Arkady __is__
 The central problem Arkady seeks to solve is how to set up an interface to
 an arbitrary "device" and control it from another process. This can be local or
-remote over a network; it uses socket communication by leveraging ZeroMQ.
+remote over a network; it uses ZeroMQ socket communication which is robust
+and lightweight.
 
-## What Arkady is **not**
-A
-Though the Arkady library may provide some utilities for talking to
-applications built with Arkady. It does not intend to be the central means by
-which you control said applications. This is not out of laziness, but rather a
-desire to leave the power in your hands. Because Arkady uses ZeroMQ sockets for
-communication, you can exercise control over your devices in almost any other
-language and using the patterns that work best for you.
+## What Arkady __is not__
+Though the Arkady library may provide some utilities for talking to Arkady
+applications. It does not intend to be the central means by
+which you control said applications. Not because Arkady is lazy, but because
+Arkady wants to give you freedom. Because ZeroMQ sockets are used for
+communication, you can communicate with Arkady application interfaces in
+most major languages: Java, C++, Python, Javascript... all good!
 
 ## What can I use Arkady to do?
 You can use Arkady to separate the controller logic of a piece of software from
@@ -28,7 +28,7 @@ interface to all my devices in one program, and to write clean logic
 in another program to leverage this interface. 
 
 You can use Arkady to put a network interface on a hardware device and save a
-a lot of wiring. Today you can get a Raspberry Pi Zero W for 5USD, with a bit
+lot of wiring. Today you can get a Raspberry Pi Zero W for 5 USD, with a bit
 more added for peripherals, you can put almost anything with wired control
 onto the network with Arkady for $20.
 
@@ -96,7 +96,9 @@ socket = context.socket(zmq.REQ)  # Request type socket, expects replies
 socket.connect(RPI_IP)
 
 while True:
+    # Send 'temp get'. First word is device name, remainder is message
     socket.send_string('temp get')
+    # Requests (must) receive replies. Print our reply
     print(socket.recv_string())
     time.sleep(5)  # Sleep 5 seconds between temperature checks
 ```
