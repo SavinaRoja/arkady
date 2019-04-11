@@ -9,7 +9,7 @@ Welcome to Arkady's documentation!
 Dependencies
 ------------
 
-Arkady is built leverage Python3's built-in `asyncio`, so it supports and
+Arkady uses Python3's built-in `asyncio`, so it supports and
 requires use of Python3.5+.
 
 ZeroMQ_ is employed for socket communication, so pyzmq_ is required.

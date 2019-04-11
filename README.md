@@ -1,11 +1,12 @@
 # Arkady
 Framework for interprocess/remote device management
 
-[github](https://github.com/SavinaRoja/arkady)
-[docs](https://arkady.readthedocs.io/en/latest/)
+[github repo](https://github.com/SavinaRoja/arkady)
+
+[Documentation](https://arkady.readthedocs.io/en/latest/)
 
 ## Dependencies
-Arkady is built leverage Python3's built-in `asyncio`, so it supports and
+Arkady uses Python3's built-in `asyncio`, so it supports and
 requires use of Python3.5+.
 
 [ZeroMQ](http://zeromq.org/) is employed for socket communication, so 
