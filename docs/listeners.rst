@@ -1,5 +1,5 @@
-Arkady's Listeners
-==================
+Arkady Listeners
+================
 
 .. automodule:: arkady.listeners
   :members:

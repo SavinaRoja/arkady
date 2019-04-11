@@ -105,3 +105,7 @@ while True:
     print(socket.recv_string())
     time.sleep(5)  # Sleep 5 seconds between temperature checks
 ```
+
+### TODO
+
+ * Support ZeroMQ security

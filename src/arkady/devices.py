@@ -9,7 +9,9 @@ such as a set of system calls, internet/intranet queries, a managed subprocess
 and more.
 
 Two basic device patterns are implemented: `SerialDevice` and `AsyncDevice`.
-Use of `SerialDevice` is recommended when the underlying communication must
+Use of `SerialDevice` is recommended when the underlying work must
+be strictly serial (meaning non-parallel). `AsyncDevice` is suitable when
+multiple executions of the `handler` can safely run simultaneously.
 """
 
 import asyncio
@@ -21,7 +23,7 @@ import uuid
 class Device(object):
     """
     The Base Device from which all other devices derive, whether they have
-    synchronous or asynchronous underlying communication.
+    synchronous or asynchronous underlying work.
     """
     def __init__(self, *args, loop=None, **kwargs):
         if loop is None:
@@ -31,6 +33,13 @@ class Device(object):
         self.jobs = asyncio.Queue()
 
     async def requests_runner(self):
+        """
+        Responsible for taking jobs out of the jobs queue and executing them.
+
+        Not implemented in this base class, must be overridden.
+
+        :return:
+        """
         raise NotImplementedError
 
     async def _handler(self,
@@ -39,6 +48,15 @@ class Device(object):
                        return_queue=None,
                        topic=None,
                        ):
+        """
+        Scheduled as a task on the loop by listeners, this method is responsible
+        for registering and queuing a call to handler as a job.
+        :param msg:
+        :param headers:
+        :param return_queue:
+        :param topic:
+        :return:
+        """
         meta_id = None
         if headers is not None:
             meta_id = uuid.uuid4()
