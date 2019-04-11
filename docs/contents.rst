@@ -7,6 +7,8 @@ Sphinx documentation contents
    :maxdepth: 2
    :caption: Contents:
 
+   :caption: Module Docs
+   devices
    listeners
 
 

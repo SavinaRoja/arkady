@@ -5,7 +5,12 @@ Framework for interprocess/remote device management
 [docs](https://arkady.readthedocs.io/en/latest/)
 
 ## Dependencies
+Arkady is built leverage Python3's built-in `asyncio`, so it supports and
+requires use of Python3.5+.
+
+[ZeroMQ](http://zeromq.org/) is employed for socket communication, so 
 [pyzmq](https://pyzmq.readthedocs.io/en/latest/)
+is required.
 
 ## What Arkady IS
 The central problem Arkady seeks to solve is how to set up an interface to
