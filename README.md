@@ -1,16 +1,19 @@
 # Arkady
 Framework for interprocess/remote device management
 
+[github](https://github.com/SavinaRoja/arkady)
+[docs](https://arkady.readthedocs.io/en/latest/)
+
 ## Dependencies
 [pyzmq](https://pyzmq.readthedocs.io/en/latest/)
 
-## What Arkady __is__
+## What Arkady IS
 The central problem Arkady seeks to solve is how to set up an interface to
 an arbitrary "device" and control it from another process. This can be local or
 remote over a network; it uses ZeroMQ socket communication which is robust
 and lightweight.
 
-## What Arkady __is not__
+## What Arkady IS NOT
 Though the Arkady library may provide some utilities for talking to Arkady
 applications. It does not intend to be the central means by
 which you control said applications. Not because Arkady is lazy, but because
@@ -30,7 +33,7 @@ in another program to leverage this interface.
 You can use Arkady to put a network interface on a hardware device and save a
 lot of wiring. Today you can get a Raspberry Pi Zero W for 5 USD, with a bit
 more added for peripherals, you can put almost anything with wired control
-onto the network with Arkady for $20.
+onto the network with Arkady economically.
 
 ### Creating an Arkady interface
 Suppose I wish to be able to read the temperature of my Raspberry Pi from

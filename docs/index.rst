@@ -8,17 +8,20 @@ Welcome to Arkady's documentation!
 
 Dependencies
 ------------
+
+pyzmq_
+
 .. _pyzmq: https://pyzmq.readthedocs.io/en/latest/
 
-What Arkady **is**
-------------------
+What Arkady IS
+--------------
 The central problem Arkady seeks to solve is how to set up an interface to
 an arbitrary "device" and control it from another process. This can be local or
 remote over a network; it uses ZeroMQ socket communication which is robust
 and lightweight.
 
-What Arkady **is not**
-----------------------
+What Arkady IS NOT
+------------------
 Though the Arkady library may provide some utilities for talking to Arkady
 applications. It does not intend to be the central means by
 which you control said applications. Not because Arkady is lazy, but because
@@ -39,7 +42,7 @@ in another program to leverage this interface.
 You can use Arkady to put a network interface on a hardware device and save a
 lot of wiring. Today you can get a Raspberry Pi Zero W for 5 USD, with a bit
 more added for peripherals, you can put almost anything with wired control
-onto the network with Arkady for $20.
+onto the network with Arkady economically.
 
 Creating an Arkady interface
 ----------------------------
@@ -48,7 +51,8 @@ another computer on my network. This command would do the trick from the
 command line: ``/opt/vc/bin/vcgencmd measure_temp`` so I want to set up an
 Arkady *device* for it.
 
-.. highlight:: python
+.. code-block:: python
+
    from arkady.devices import AsyncDevice
    import subprocess
 
@@ -68,7 +72,8 @@ Arkady *device* for it.
 
 Now I need to create an Arkady application to make use of this custom "device".
 
-.. highlight:: python
+.. code-block:: python
+
    from arkady import Application
 
    class RpiCPUTempApp(Application):
@@ -92,7 +97,8 @@ returns the temperature string.
 Now, you can send messages via ZeroMQ in whatever language you please. Here's
 a simple program in Python that will do so.
 
-.. highlight:: python
+.. code-block:: python
+
    import time
    import zmq
 
@@ -110,4 +116,17 @@ a simple program in Python that will do so.
        print(socket.recv_string())
        time.sleep(5)  # Sleep 5 seconds between temperature checks
 
-.. _contents:
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
+
+   listeners
+   contents
+
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
