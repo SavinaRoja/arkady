@@ -1,6 +1,15 @@
 # coding: utf-8
 
 """
+"Device" is a loose term in Arkady. It represents a fundamental unit of
+interface and should generally map to a logical unit of control. This could be
+interaction with an actual physical device or peripheral such as a sensor, a
+motor, an Arduino, a DMX controller, etc. Or it could be something more virtual
+such as a set of system calls, internet/intranet queries, a managed subprocess
+and more.
+
+Two basic device patterns are implemented: `SerialDevice` and `AsyncDevice`.
+Use of `SerialDevice` is recommended when the underlying communication must
 """
 
 import asyncio
@@ -74,12 +83,12 @@ class AsyncDevice(Device):
     # The task unit, we handle wrapping normal funcs and coros
     async def enqueue(self, func, meta_id=None):
         if meta_id is None:  # No reply needed
-            if asyncio.iscoroutinefunction(func):
+            if asyncio.iscoroutinefunction(func.func):
                 await func()
             else:
                 await self.loop.run_in_executor(None, func)
         else:  # We should send back a reply
-            if asyncio.iscoroutinefunction(func):
+            if asyncio.iscoroutinefunction(func.func):
                 reply = await func()
             else:
                 reply = await self.loop.run_in_executor(None, func)
