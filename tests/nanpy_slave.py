@@ -68,9 +68,12 @@ class GenericNanpy(SerialDevice):
             return 'ERROR: not one of the known functions, {}'.format(word_map.keys())
         try:
             # Call the corresponding method
-            return word_map[key_word](pin, *words[2:])
+            ret_val = word_map[key_word](pin, *words[2:])
+            if ret_val is not None:
+                ret_val = str(ret_val)
+            return ret_val
         except:
-            return 'ERROR: "{}" failed, maybe a bad message or connection'
+            return 'ERROR: "{}" failed, maybe a bad message or connection'.format(msg)
 
 
 class MyApplication(Application):
