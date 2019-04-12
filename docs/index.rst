@@ -122,9 +122,7 @@ a simple program in Python that will do so.
        # Requests (must) receive replies. Print our reply
        print(socket.recv_string())
        time.sleep(5)  # Sleep 5 seconds between temperature checks
-
-
-.. _contents:
+::
 
 Sphinx documentation contents
 =============================
