@@ -36,7 +36,7 @@ class GenericNanpy(SerialDevice):
         try:
             value = int(value)
         except ValueError:
-            return 'Got a value that could not be treated as integer'
+            return 'ERROR: Got a value that could not be treated as integer'
         self.ardu.pinMode(pin_number, self.ardu.OUTPUT)
         self.ardu.analogWrite(pin_number, value)
 
@@ -57,7 +57,7 @@ class GenericNanpy(SerialDevice):
             'aread': self.analog_read,
         }
         words = msg.split()
-        if len(words) < 2:  # Check for empty message
+        if len(words) < 2:  # Check for too short message
             return 'ERROR: message must contain at least 2 words!'
         key_word = words[0]
         try:

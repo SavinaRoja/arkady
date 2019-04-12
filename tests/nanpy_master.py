@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Demonstration of a program controllering the very generic Arkady interface to
+Demonstration of a program controlling the very generic Arkady interface to
 NanPy.
 
 Direct dependencies are: pyzmq
