@@ -123,13 +123,19 @@ a simple program in Python that will do so.
        print(socket.recv_string())
        time.sleep(5)  # Sleep 5 seconds between temperature checks
 
+
+.. _contents:
+
+Sphinx documentation contents
+=============================
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
+   :caption: Module Docs
    devices
    listeners
-
 
 
 Indices and tables
