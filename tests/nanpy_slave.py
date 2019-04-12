@@ -57,21 +57,25 @@ class GenericNanpy(SerialDevice):
             'aread': self.analog_read,
         }
         words = msg.split()
-        if len(words) == 0:  # Check for empty message
-            return 'ERROR: empty message!'
+        if len(words) < 2:  # Check for empty message
+            return 'ERROR: message must contain at least 2 words!'
         key_word = words[0]
+        try:
+            pin = int(words[1])
+        except ValueError:
+            return 'ERROR: got non-int for pin number {}'.format(words[1])
         if key_word not in word_map:  # Check if we recognize the first word
             return 'ERROR: not one of the known functions, {}'.format(word_map.keys())
         try:
             # Call the corresponding method
-            return word_map[key_word](*words[1:])
+            return word_map[key_word](pin, *words[2:])
         except:
             return 'ERROR: "{}" failed, maybe a bad message or connection'
 
 
 class MyApplication(Application):
     def config(self):
-        self.add_device('nanpy', ARDUINO_PORT, GenericNanpy)
+        self.add_device('nanpy', GenericNanpy, ARDUINO_PORT)
         self.add_router(bind_to='tcp://*:5555')
 
-MyApplication.run()
+MyApplication().run()

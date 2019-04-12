@@ -9,9 +9,11 @@ Direct dependencies are: pyzmq
 
 import zmq
 
+NANPY_ADRRESS = 'tcp://localhost:5555'  # replace localhost with IP if remote
+
 context = zmq.Context()
-sock = zmq.socket(zmq.REQ)
-sock.connect('tcp://localhost:5555')
+sock = context.socket(zmq.REQ)
+sock.connect(NANPY_ADRRESS)
 
 while True:
     msg = input('Send a message to the Nanpy device: ')
