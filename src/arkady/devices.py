@@ -85,6 +85,8 @@ class SerialDevice(Device):
             if meta_id is not None:  # We expect to send a reply
                 headers, return_queue = self.jobs_meta.pop(meta_id)
                 reply = await self.loop.run_in_executor(self.executor, handler)
+                if reply is None:  # If we get a None return, just acknowledge completion
+                    reply = 'ACK'
                 await return_queue.put(headers + [reply.encode('utf-8')])
             else:
                 await self.loop.run_in_executor(self.executor, handler)

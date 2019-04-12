@@ -9,8 +9,8 @@ class RouterApplication(Application):
 
     def config(self):
         self.add_router(bind_to='tcp://*:{}'.format(self.router_port))
-        self.add_device(DummySerialDevice, 'serial')
-        self.add_device(DummyAsyncDevice, 'async')
+        self.add_device('serial', DummySerialDevice)
+        self.add_device('async', DummyAsyncDevice)
 
 
 class SubApplication(Application):
@@ -18,8 +18,8 @@ class SubApplication(Application):
 
     def config(self):
         self.add_sub(connect_to='tcp://localhost:{}'.format(self.sub_port), topics=['test'])
-        self.add_device(DummySerialDevice, 'serial')
-        self.add_device(DummyAsyncDevice, 'async')
+        self.add_device('serial', DummySerialDevice)
+        self.add_device('async', DummyAsyncDevice)
 
 
 class DualApplication(Application):
@@ -29,8 +29,8 @@ class DualApplication(Application):
     def config(self):
         self.add_router(bind_to='tcp://*:{}'.format(self.router_port))
         self.add_sub(connect_to='tcp://localhost:{}'.format(self.sub_port), topics=['test'])
-        self.add_device(DummySerialDevice, 'serial')
-        self.add_device(DummyAsyncDevice, 'async')
+        self.add_device('serial', DummySerialDevice)
+        self.add_device('async', DummyAsyncDevice)
 
 
 def a0():

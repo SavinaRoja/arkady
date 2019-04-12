@@ -109,7 +109,7 @@ class Application(object):
             print('terminating')
             self.zmq_context.term()
 
-    def add_device(self, device_class, name: str, *args, **kwargs):
+    def add_device(self, name: str, device_class, *args, **kwargs):
         device = device_class(*args,
                               loop=self.loop,
                               **kwargs)
@@ -121,7 +121,6 @@ class Application(object):
             raise ValueError('Cannot register {}, already registered'.format(name))
         self.device_key_map[name] = device
         self.devices.append(device)
-
 
 
 class ApplicationConfigError(Exception):
