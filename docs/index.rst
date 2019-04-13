@@ -60,10 +60,10 @@ Arkady *device* for it.
 
 .. code-block:: python
 
-   from arkady.devices import AsyncDevice
+   from arkady.components import AsyncComponent
    import subprocess
 
-   class RpiCPUTemp(AsyncDevice):
+   class RpiCPUTemp(AsyncComponent):
        def handler(self, msg, *args, **kwargs):
            if msg == 'get':
                # command returns bytestring like b"temp=47.8'C"
@@ -76,6 +76,7 @@ Arkady *device* for it.
                return temperature
            else:
                return 'Unrecognized msg. Must be "get"'
+::
 
 Now I need to create an Arkady application to make use of this custom "device".
 
@@ -93,6 +94,7 @@ Now I need to create an Arkady application to make use of this custom "device".
 
    my_app = RpiCPUTempApp()
    my_app.run()  # blocks until terminated
+::
 
 So now this application will wait for messages. Any message beginning with the
 word `temp` will be referred to the `RPiCPUTemp` device. The message after the
@@ -132,7 +134,9 @@ Sphinx documentation contents
    :caption: Contents:
 
    :caption: Module Docs
-   devices
+
+   installing
+   components
    listeners
 
 

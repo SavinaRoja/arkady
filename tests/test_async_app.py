@@ -1,11 +1,11 @@
 from arkady import Application
-from arkady.devices import AsyncDevice, SerialDevice
+from arkady.components import AsyncComponent, SerialComponent
 
 import asyncio
 import time
 
 
-class MyDevice(AsyncDevice):
+class MyDevice(AsyncComponent):
     async def handler(self, msg, *args, **kwargs):
         # Doing some longer work
         print(msg)

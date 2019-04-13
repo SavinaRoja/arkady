@@ -12,7 +12,7 @@ def load_readme():
 
 
 setup(name='arkady',
-      version='0.0.1',
+      version='0.0.2',
       description='A framework for remote device management',
       author='Paul Barton',
       author_email='pablo.barton@gmail.com',

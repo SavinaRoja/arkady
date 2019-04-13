@@ -1,5 +1,5 @@
 from arkady.application import Application
-from arkady.devices import DummySerialDevice, DummyAsyncDevice
+from arkady.components import DummySerialDevice, DummyAsyncDevice
 
 import multiprocessing
 

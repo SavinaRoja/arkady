@@ -48,10 +48,10 @@ command line: `/opt/vc/bin/vcgencmd measure_temp` so I want to set up an
 Arkady *device* for it.
 
 ```python
-from arkady.devices import AsyncDevice
+from arkady.devices import AsyncComponent
 import subprocess
 
-class RpiCPUTemp(AsyncDevice):
+class RpiCPUTemp(AsyncComponent):
     def handler(self, msg, *args, **kwargs):
         if msg == 'get':
             # command returns bytestring like b"temp=47.8'C"

@@ -8,14 +8,14 @@ Indirect depencences are: pyserial, pyzmq
 """
 
 from arkady import Application
-from arkady.devices import SerialDevice
+from arkady.components import SerialComponent
 
 from nanpy import SerialManager, ArduinoApi
 
 ARDUINO_PORT = '/dev/ttyUSB0'  # On Windows this is more like "COM3"
 
 
-class GenericNanpy(SerialDevice):
+class GenericNanpy(SerialComponent):
     def __init__(self, port, *args, **kwargs):
         super(GenericNanpy, self).__init__(*args, **kwargs)
         self._serial_manager = SerialManager(device=port, baudrate=115200)

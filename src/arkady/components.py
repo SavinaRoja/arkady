@@ -1,16 +1,16 @@
 # coding: utf-8
 
 """
-"Device" is a loose term in Arkady. It represents a fundamental unit of
+A Component represents a fundamental unit of
 interface and should generally map to a logical unit of control. This could be
 interaction with an actual physical device or peripheral such as a sensor, a
 motor, an Arduino, a DMX controller, etc. Or it could be something more virtual
 such as a set of system calls, internet/intranet queries, a managed subprocess
 and more.
 
-Two basic device patterns are implemented: `SerialDevice` and `AsyncDevice`.
-Use of `SerialDevice` is recommended when the underlying work must
-be strictly serial (meaning non-parallel). `AsyncDevice` is suitable when
+Two basic device patterns are implemented: `SerialComponent` and `AsyncComponent`.
+Use of `SerialComponent` is recommended when the underlying work must
+be strictly serial (meaning non-parallel). `AsyncComponent` is suitable when
 multiple executions of the `handler` can safely run simultaneously.
 """
 
@@ -20,9 +20,9 @@ from functools import partial
 import uuid
 
 
-class Device(object):
+class Component(object):
     """
-    The Base Device from which all other devices derive, whether they have
+    The Base Component from which all other devices derive, whether they have
     synchronous or asynchronous underlying work.
     """
     def __init__(self, *args, loop=None, **kwargs):
@@ -72,9 +72,9 @@ class Device(object):
         raise NotImplementedError
 
 
-class SerialDevice(Device):
+class SerialComponent(Component):
     def __init__(self, *args, **kwargs):
-        super(SerialDevice, self).__init__(*args, **kwargs)
+        super(SerialComponent, self).__init__(*args, **kwargs)
         # self.port = port
         self.executor = concurrent.futures.ThreadPoolExecutor(max_workers=1)
 
@@ -96,9 +96,9 @@ class SerialDevice(Device):
         raise NotImplementedError
 
 
-class AsyncDevice(Device):
+class AsyncComponent(Component):
     def __init__(self, *args, **kwargs):
-        super(AsyncDevice, self).__init__(*args, **kwargs)
+        super(AsyncComponent, self).__init__(*args, **kwargs)
 
     # The task unit, we handle wrapping normal funcs and coros
     async def enqueue(self, func, meta_id=None):
@@ -128,7 +128,7 @@ class AsyncDevice(Device):
             #     self.loop.create_task(self.enqueue(handler, headers, return_queue))
 
 
-class DummySerialDevice(SerialDevice):
+class DummySerialDevice(SerialComponent):
     def handler(self, msg: str, *args, **kwargs) -> str:
         if 'topic' in kwargs:
             print(kwargs['topic'])
@@ -136,7 +136,7 @@ class DummySerialDevice(SerialDevice):
         return msg
 
 
-class DummyAsyncDevice(AsyncDevice):
+class DummyAsyncDevice(AsyncComponent):
     def handler(self, msg: str, *args, **kwargs) -> str:
         if 'topic' in kwargs:
             print(kwargs['topic'])
