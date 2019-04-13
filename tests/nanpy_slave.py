@@ -78,7 +78,7 @@ class GenericNanpy(SerialComponent):
 
 class MyApplication(Application):
     def config(self):
-        self.add_device('nanpy', GenericNanpy, ARDUINO_PORT)
+        self.add_component('nanpy', GenericNanpy, ARDUINO_PORT)
         self.add_router(bind_to='tcp://*:5555')
 
 MyApplication().run()

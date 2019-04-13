@@ -34,7 +34,7 @@ class MyDevice(AsyncComponent):
 class MyApp(Application):
     def config(self):
         self.add_router(bind_to='tcp://*:5555')
-        self.add_device('test', MyDevice)
+        self.add_component('test', MyDevice)
 
 
 MyApp().run()
