@@ -9,21 +9,19 @@ Welcome to Arkady's documentation!
 Dependencies
 ------------
 
-Arkady uses Python3's built-in `asyncio`, so it supports and
+Arkady uses Python3's built-in ``asyncio``, so it supports and
 requires use of Python3.5+.
 
 ZeroMQ_ is employed for socket communication, so pyzmq_ is required.
 
 .. _ZeroMQ: http://zeromq.org/
 
-pyzmq_
-
 .. _pyzmq: https://pyzmq.readthedocs.io/en/latest/
 
 What Arkady IS
 --------------
 The central problem Arkady seeks to solve is how to set up an interface to
-an arbitrary "device" and control it from another process. This can be local or
+an arbitrary "component" and control it from another process. This can be local or
 remote over a network; it uses ZeroMQ socket communication which is robust
 and lightweight.
 
@@ -43,10 +41,10 @@ the nitty-gritty of hardware integration. This problem is why I wrote the code
 that turned into Arkady in the first place: I had an application that needed to
 simultaneously interact with Arduinos, DMX, video, audio, sensors, and keep
 track of program control flow. Using Arkady I was able to create a simple
-interface to all my devices in one program, and to write clean logic
+interface to all my components in one program, and to write clean logic
 in another program to leverage this interface.
 
-You can use Arkady to put a network interface on a hardware device and save a
+You can use Arkady to put a network interface on a hardware component and save a
 lot of wiring. Today you can get a Raspberry Pi Zero W for 5 USD, with a bit
 more added for peripherals, you can put almost anything with wired control
 onto the network with Arkady economically.
@@ -56,7 +54,7 @@ Creating an Arkady interface
 Suppose I wish to be able to read the temperature of my Raspberry Pi from
 another computer on my network. This command would do the trick from the
 command line: ``/opt/vc/bin/vcgencmd measure_temp`` so I want to set up an
-Arkady *device* for it.
+Arkady *component* for it.
 
 .. code-block:: python
 
@@ -78,7 +76,7 @@ Arkady *device* for it.
                return 'Unrecognized msg. Must be "get"'
 ::
 
-Now I need to create an Arkady application to make use of this custom "device".
+Now I need to create an Arkady application to make use of this custom "component".
 
 .. code-block:: python
 
@@ -87,8 +85,8 @@ Now I need to create an Arkady application to make use of this custom "device".
    class RpiCPUTempApp(Application):
        def config(self):
            """This is called as the last step in setup for the Application"""
-           # Creates the device and gives it the name 'temp'
-           self.add_device(RpiCPUTemp, 'temp')
+           # Creates the component and gives it the name 'temp'
+           self.add_component(RpiCPUTemp, 'temp')
            # Creates a router type listener and listens on port 5555
            self.add_router(bind_to='tcp://*:5555')
 
@@ -97,8 +95,8 @@ Now I need to create an Arkady application to make use of this custom "device".
 ::
 
 So now this application will wait for messages. Any message beginning with the
-word `temp` will be referred to the `RPiCPUTemp` device. The message after the
-name `temp` will be give to the device method `handler` as the `msg`
+word `temp` will be referred to the `RPiCPUTemp` component. The message after the
+name `temp` will be give to the component method `handler` as the `msg`
 argument. `RPiCPUTemp.handler` only recognizes the message `"get"` and will
 report an error if it gets something else. Otherwise it runs the command and
 returns the temperature string.
@@ -119,7 +117,7 @@ a simple program in Python that will do so.
    socket.connect(RPI_URI)
 
    while True:
-       # Send 'temp get'. First word is device name, remainder is message
+       # Send 'temp get'. First word is component name, remainder is message
        socket.send_string('temp get')
        # Requests (must) receive replies. Print our reply
        print(socket.recv_string())

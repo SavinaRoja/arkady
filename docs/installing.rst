@@ -18,14 +18,14 @@ base directory of the source code and perform:
 
 .. code-block:: bash
 
-python setup.py install
+    python setup.py install
 ::
 
 or
 
 .. code-block:: bash
 
-pip install .
+    pip install .
 ::
 
 Development Installation
@@ -37,16 +37,16 @@ a virtual environment is simple and recommended, here it is in bash:
 
 .. code-block:: bash
 
-python -m venv venv
-source venv/bin/activate
-pip install -e .
+    python -m venv venv
+    source venv/bin/activate
+    pip install -e .
 ::
 
 and for Windows:
 
 .. code-block:: console
 
-python -m venv venv
-.\venv\Scripts\activate
-pip install -e .
+    python -m venv venv
+    .\venv\Scripts\activate
+    pip install -e .
 ::
