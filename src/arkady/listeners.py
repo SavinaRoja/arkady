@@ -35,12 +35,12 @@ async def router(application, bind_to=None):
             # Separate the header from the body of the message
             headers, body = request[0:2], request[2]
             body = body.decode('utf-8')
-            # Separate the name from the msg to find the device to pass msg to
+            # Separate the name from the msg to find the component to pass msg to
             name, msg = body.split(maxsplit=1)
-            device = application.device_key_map[name]
-            # Pass the header, msg, and return_queue to device for enqueuing
+            component = application.component_key_map[name]
+            # Pass the header, msg, and return_queue to component for enqueuing
             loop.create_task(
-                device._handler(
+                component._handler(
                     headers=headers,
                     msg=msg,
                     return_queue=return_queue
@@ -95,6 +95,6 @@ async def sub(application, connect_to=None, topics=None):
         topic, body = pub[0], pub[1]
         topic, body = topic.decode('utf-8'), body.decode('utf-8')
         name, msg = body.split(maxsplit=1)
-        device = application.device_key_map[name]
-        # Pass the msg, and return_queue to device for enqueuing
-        loop.create_task(device._handler(topic=topic, msg=msg))
+        component = application.component_key_map[name]
+        # Pass the msg, and return_queue to component for enqueuing
+        loop.create_task(component._handler(topic=topic, msg=msg))
