@@ -31,16 +31,15 @@ Application.
 
     from arkady import Application
 
+
     class MyApplication(Application):
         def config(self):
             self.add_router(bind_to='tcp://*:5555')
 
-::
-
 The method ``config`` gets called during creation of the application and is a
 good place to put registrations of listeners and (as we'll address in a moment)
 components. ``add_router`` will set up a router listener for the application,
-and I have explicitly passed ``bind_to='tcp://*:5555'`` which instructs the
+and we have explicitly passed ``bind_to='tcp://*:5555'`` which instructs the
 added router to listen on port 5555 (this is also the default if you don't
 specify).
 
@@ -50,7 +49,7 @@ to it.
 Creating a component
 --------------------
 
-The Nanpy interface has four main functions which I will wish to make accessible
+The Nanpy interface has four main functions which we will wish to make accessible
 through the application: ``digitalRead``, ``analogRead``, ``digitalWrite``, and
 ``analogWrite``. So let's create a component that implements those actions.
 
@@ -101,8 +100,113 @@ execution of jobs.
             else:
                 self.ardu.digitalWrite(pin_number, self.ardu.LOW)
 
-::
+In the ``__init__`` method we initialize the Nanpy ``ArduinoApi`` on the
+specified port In the methods ``analog_read``, ``digital_read``,
+``analog_write``, and ``digital_write`` we provide Nanpy functionality.
+
+The next step is to write a message handler for the component. The application's
+listeners will pass messages received along to this method.
+
+.. code-block:: python
+
+    class GenericNanpy(SerialComponent):
+
+        ...
+
+        def handler(self, msg, *args, **kwargs):
+            """Handle an inbound message. Returned values go back as reply."""
+            word_map = {
+                'dwrite': self.digital_write,
+                'awrite': self.analog_write,
+                'dread': self.digital_read,
+                'aread': self.analog_read,
+            }
+            words = msg.split()
+            if len(words) < 2:  # Check for too short message
+                return 'ERROR: message must contain at least 2 words!'
+            key_word = words[0]
+            try:
+                pin = int(words[1])
+            except ValueError:
+                return 'ERROR: got non-int for pin number {}'.format(words[1])
+            if key_word not in word_map:  # Check if we recognize the first word
+                return 'ERROR: not one of the known functions, {}'.format(word_map.keys())
+            try:
+                # Call the corresponding method
+                ret_val = word_map[key_word](pin, *words[2:])
+                if ret_val is not None:
+                    ret_val = str(ret_val)
+                return ret_val
+            except:
+                return 'ERROR: "{}" failed, maybe a bad message or connection'.format(msg)
+
+This ``handler`` method does the job of interpreting messages so that action may
+be taken, along with some error handling. Care is taken to return the results of
+the called methods, as the returned string values will get passed back to a
+client of our Arkady application as the body of a reply message, this will be
+addressed further below.
+
+Now that our custom component has been implemented, we wish to add it to our
+application and register it so that messages may be passed to it. Let's update
+``my_application.py``:
+
+.. code-block:: python
+    :emphasize-lines: 10
+
+    # my_application.py
+
+    from arkady import Application
+
+    ARDUINO_PORT = '/dev/ttyUSB0'  # On Windows this is more like "COM3"
+
+
+    class MyApplication(Application):
+        def config(self):
+            self.add_component('nanpy', GenericNanpy, ARDUINO_PORT)
+            self.add_router(bind_to='tcp://*:5555')
+
+This addition to ``config`` tells the application that when the listeners
+receive messages, if the first word of the message is "nanpy" then the message
+should go to an instance of ``GenericNanpy``, created once for the application
+with ``GenericNanpy(ARDUINO_PORT)``.
+
+Now the application is completed, and here it is all together:
+
+.. literalinclude:: ../tests/nanpy_slave.py
+
+A Client for our Arkady Application
+-----------------------------------
+
+It should be noted, that because Arkady makes use of ZeroMQ, a client
+can be written in nearly any language as bindings are widely implemented. The
+following example is simply an example in Python using PyZMQ. It is interactive
+so that you might test out sending arbitrary messages to your Arduino (via
+Nanpy, via Arkady!).
+
+.. literalinclude:: ../tests/nanpy_master.py
 
 A Quick Guide to Setting up Nanpy
 ---------------------------------
 
+Using Nanpy from your computer is as simple as:
+
+.. code-block:: console
+
+    pip install nanpy
+
+To put the corresponding firmware on your Arduino, you can get a copy of this
+firmware_ with the following command. These instructions are also outlined there.
+
+.. code-block:: console
+
+    git clone https://github.com/nanpy/nanpy-firmware.git
+
+.. _firmware: https://github.com/nanpy/nanpy-firmware
+
+Then change directories to the subsequent ``nanpy-firmware`` directory and
+execute ``./configure.sh``. Then copy the ``nanpy-firmware/Nanpy`` directory
+into your Arduino sketchbook directory.
+
+Plug in your Arduino, start the Arduino IDE, configure your boardset and port,
+open the Nanpy module from the sketchbook, and then Upload. Assuming everything
+went well, your Arduino should be ready for Nanpy control.

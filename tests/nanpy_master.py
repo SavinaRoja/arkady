@@ -17,6 +17,7 @@ sock.connect(NANPY_ADRRESS)
 
 while True:
     msg = input('Send a message to the Nanpy device: ')
+    # set first word as "nanpy" so message goes to our registered component
     sock.send_string('nanpy ' + msg)
     print('Waiting for reply.')
     reply = sock.recv_string()

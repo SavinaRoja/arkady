@@ -77,8 +77,6 @@ Arkady *component* for it.
            else:
                return 'Unrecognized msg. Must be "get"'
 
-::
-
 Now I need to create an Arkady application to make use of this custom "component".
 
 .. code-block:: python
@@ -95,8 +93,6 @@ Now I need to create an Arkady application to make use of this custom "component
 
    my_app = RpiCPUTempApp()
    my_app.run()  # blocks until terminated
-
-::
 
 So now this application will wait for messages. Any message beginning with the
 word `temp` will be referred to the `RPiCPUTemp` component. The message after the
@@ -126,8 +122,6 @@ a simple program in Python that will do so.
        # Requests (must) receive replies. Print our reply
        print(socket.recv_string())
        time.sleep(5)  # Sleep 5 seconds between temperature checks
-
-::
 
 Sphinx documentation contents
 =============================
