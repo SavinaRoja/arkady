@@ -36,6 +36,7 @@ most major languages: Java, C++, Python, Javascript... all good!
 
 What can I use Arkady to do?
 ----------------------------
+
 You can use Arkady to separate the controller logic of a piece of software from
 the nitty-gritty of hardware integration. This problem is why I wrote the code
 that turned into Arkady in the first place: I had an application that needed to
@@ -51,6 +52,7 @@ onto the network with Arkady economically.
 
 Creating an Arkady interface
 ----------------------------
+
 Suppose I wish to be able to read the temperature of my Raspberry Pi from
 another computer on my network. This command would do the trick from the
 command line: ``/opt/vc/bin/vcgencmd measure_temp`` so I want to set up an
@@ -74,6 +76,7 @@ Arkady *component* for it.
                return temperature
            else:
                return 'Unrecognized msg. Must be "get"'
+
 ::
 
 Now I need to create an Arkady application to make use of this custom "component".
@@ -92,6 +95,7 @@ Now I need to create an Arkady application to make use of this custom "component
 
    my_app = RpiCPUTempApp()
    my_app.run()  # blocks until terminated
+
 ::
 
 So now this application will wait for messages. Any message beginning with the
@@ -122,6 +126,7 @@ a simple program in Python that will do so.
        # Requests (must) receive replies. Print our reply
        print(socket.recv_string())
        time.sleep(5)  # Sleep 5 seconds between temperature checks
+
 ::
 
 Sphinx documentation contents
@@ -131,12 +136,12 @@ Sphinx documentation contents
    :maxdepth: 2
    :caption: Contents:
 
-   :caption: Module Docs
-
    installing
+   intro
    components
    listeners
 
+   :caption: Module Docs
 
 Indices and tables
 ==================
